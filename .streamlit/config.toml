@@ -1,0 +1,7 @@
+[theme]
+base                = "dark"
+primaryColor        = "#2A9D8F"   # teal accent
+backgroundColor     = "#0F1117"   # near-black background
+secondaryBackgroundColor = "#1C1F26"  # card / sidebar background
+textColor           = "#E8EAF0"   # soft white text
+font                = "sans serif"
