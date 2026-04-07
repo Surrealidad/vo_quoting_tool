@@ -73,11 +73,33 @@ X_train, X_test, y_train, y_test = train_test_split(
 print(f"  Train: {len(X_train):,}  |  Test: {len(X_test):,}")
 
 # ─── CLASSIC BASELINE (on test set) ────────────────────────────────────────
+# Word-based classic: wordcount × base_rate × TR_mult × language_rate.
+# A competent per-word approach — better than file-based, but blind to
+# spread, minimum fees, and words-per-actor dynamics.
+
+BASE_WORD_RATE   = 1.30
+TR_MULT_CLASSIC  = {'NoTR': 1.0, 'STR': 2.0, 'HTR': 2.5, 'SoundSync': 3.5, 'LipSync': 4.0}
+LANGUAGE_RATES   = {
+    'Polish': 0.50, 'LATAM': 0.60, 'Brazilian Portuguese': 0.65,
+    'Chinese': 0.70, 'Spanish': 0.85, 'German': 1.00, 'French': 1.05,
+    'English': 1.10, 'Dutch': 1.15, 'Korean': 1.30, 'Japanese': 2.50,
+}
+
+# Compute classic forecast on the full past dataset BEFORE encoding,
+# then index into the test set after the split.
+df_raw_past = df_raw[df_raw[TARGET].notna()].copy()
+df_raw_past['classic'] = df_raw_past.apply(
+    lambda r: r['Wordcount']
+              * BASE_WORD_RATE
+              * TR_MULT_CLASSIC[r['Time_Restriction']]
+              * LANGUAGE_RATES[r['Language']],
+    axis=1
+)
 
 test_idx      = X_test.index
-y_classic = df.loc[test_idx, 'Cost_Forecast']
+y_classic     = df_raw_past.loc[test_idx, 'classic']
 mape_baseline = mean_absolute_percentage_error(y_test, y_classic) * 100
-print(f"\nClassic baseline MAPE: {mape_baseline:.1f}%")
+print(f"\nClassic baseline MAPE (word-based): {mape_baseline:.1f}%")
 
 # ─── MODEL TRAINING ────────────────────────────────────────────────────────────
 
@@ -117,8 +139,9 @@ mape_cv    = -cv_scores.mean() * 100
 df_test              = df.loc[test_idx].copy()
 df_test['y_pred']    = y_pred
 df_test['y_true']    = y_test.values
-df_test['mape_row']  = (abs(df_test['y_pred'] - df_test['y_true']) / df_test['y_true']) * 100
-df_test['mape_base'] = (abs(df.loc[test_idx, 'Cost_Forecast'] - df_test['y_true']) / df_test['y_true']) * 100
+df_test['y_classic'] = y_classic.values
+df_test['mape_row']  = (abs(df_test['y_pred']    - df_test['y_true']) / df_test['y_true']) * 100
+df_test['mape_base'] = (abs(df_test['y_classic'] - df_test['y_true']) / df_test['y_true']) * 100
 mape_by_tr           = df_test.groupby('Time_Restriction')[['mape_row','mape_base']].mean()
 
 print(f"\n{'─'*50}")

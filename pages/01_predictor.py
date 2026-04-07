@@ -132,7 +132,7 @@ if submitted:
     df_row   = build_features(wordcount, filecount, n_actors, n_chars,
                                language, time_restriction, scope_spread)
     ml_cost  = encode_and_predict(df_row, model, encoder, metadata["features"])
-    old_cost = classic_forecast(filecount, language, time_restriction)
+    old_cost = classic_forecast(wordcount, language, time_restriction)
     gap      = ml_cost - old_cost
     gap_pct  = (gap / old_cost) * 100
 
@@ -150,7 +150,7 @@ if submitted:
     r2.metric(
         label="Traditional Forecast",
         value=f"€{old_cost:,.0f}",
-        help="Filecount × fixed rate per TR and language. Does not account for wordcount density or spread."
+        help="Wordcount × per-word rate × TR multiplier × language rate. Accounts for script volume but not spread or minimum fee dynamics."
     )
     r3.metric(
         label="Difference",
@@ -186,7 +186,7 @@ if submitted:
                 f"The main reason: this session has only **{wpf:.1f} words per file**, "
                 f"but the traditional rate was calibrated assuming ~7 wpf. "
                 f"Fewer words per file means more files to produce the same content — "
-                f"and the traditional method mistakes filecount for workload."
+                f"The classic method captures script volume correctly but cannot account for minimum fee exposure at this actor count."
             )
         if scope_spread in ("High", "Very High"):
             msg += (

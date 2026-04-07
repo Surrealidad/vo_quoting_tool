@@ -64,11 +64,11 @@
     ]
   },
   "metrics": {
-    "mape_classic": 30.33,
+    "mape_classic": 21.39,
     "mape_model_test": 10.53,
     "mape_model_cv": 11.25,
     "r2": 0.966,
-    "improvement_pp": 19.79
+    "improvement_pp": 10.86
   },
   "training_samples": 837,
   "test_samples": 210

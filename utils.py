@@ -24,15 +24,13 @@ DATA_PATH = ROOT / "data" / "vo_dataset.csv"
 SPREAD_ORDER = ['Very Low', 'Low', 'Normal', 'High', 'Very High']
 TR_ORDER     = ['NoTR', 'STR', 'HTR', 'SoundSync', 'LipSync']
 
-# Classic rates: EUR per file, per TR type.
-# Calibrated at a plausible but slightly-off words-per-file assumption —
-# this is what the "old method" does. See train.py for full explanation.
-CLASSIC_RATES = {
-    'NoTR':      1.30 * 1.0 * 7.0,
-    'STR':       1.30 * 2.0 * 6.5,
-    'HTR':       1.30 * 2.5 * 6.0,
-    'SoundSync': 1.30 * 3.5 * 5.5,
-    'LipSync':   1.30 * 4.0 * 5.5,
+# Classic method: EUR per word × TR multiplier × language rate.
+# A competent word-based approach that accounts for script volume,
+# language, and time restriction — but has no visibility into
+# spread dynamics, minimum fee exposure, or words-per-actor depth.
+BASE_WORD_RATE = 1.30
+TR_MULT = {
+    'NoTR': 1.0, 'STR': 2.0, 'HTR': 2.5, 'SoundSync': 3.5, 'LipSync': 4.0,
 }
 
 LANGUAGE_RATES = {
@@ -112,11 +110,11 @@ def encode_and_predict(df_row, model, encoder, feature_order):
 
 # ─── CLASSIC FORMULA ───────────────────────────────────────────────────────
 
-def classic_forecast(filecount, language, time_restriction):
+def classic_forecast(wordcount, language, time_restriction):
     """
-    The 'old method': filecount × rate per file.
-    TR-aware and language-aware, but blind to wordcount,
-    words-per-file variance, actor spread, and minimum fees.
+    Word-based classic method: wordcount × base rate × TR multiplier × language rate.
+    Accounts for script volume, language, and time restriction.
+    Does not account for spread, minimum fees, or words-per-actor dynamics.
     """
-    rate = CLASSIC_RATES[time_restriction] * LANGUAGE_RATES[language]
-    return round(filecount * rate, 2)
+    rate = BASE_WORD_RATE * TR_MULT[time_restriction] * LANGUAGE_RATES[language]
+    return round(wordcount * rate, 2)

@@ -69,7 +69,7 @@ st.caption(
 df_all  = load_data()
 df_past = df_all[df_all["Cost_Actuals"].notna()].copy()
 df_past["classic"] = df_past.apply(
-    lambda r: classic_forecast(r["Filecount"], r["Language"], r["Time_Restriction"]), axis=1
+    lambda r: classic_forecast(r["Wordcount"], r["Language"], r["Time_Restriction"]), axis=1
 )
 df_past["mape_old"] = (
     abs(df_past["classic"] - df_past["Cost_Actuals"]) / df_past["Cost_Actuals"] * 100
@@ -143,20 +143,26 @@ st.subheader("What does this mean in practice?")
 col1, col2 = st.columns(2)
 with col1:
     st.markdown(f"""
-**The traditional method** quotes by multiplying filecount by a fixed rate.
-It knows about language and time restriction, but treats every file as
-equivalent — ignoring how many words are actually in each file, how thinly
-the scope is spread across actors, and the minimum fee dynamics that follow.
+**The classic method** quotes by multiplying wordcount by a fixed per-word rate,
+adjusted for language and time restriction. This is a reasonable approach and
+accounts for the main cost drivers in straightforward sessions.
+
+Where it falls short is in sessions with large casts and uneven scope distribution.
+When many actors each record a small amount of material, minimum session fees
+dominate the actual cost — and a per-word formula has no way to reflect this.
 
 On average, it is off by **{metrics['mape_classic']:.0f}%**.
 """)
 
 with col2:
     st.markdown(f"""
-**The ML model** was trained on the same historical data and learned that
-*words per file* is the most important signal the traditional method ignores.
-A LipSync file averages ~4.5 words. A NoTR file averages ~8. Using filecount
-as a workload proxy conflates these — and the error is systematic.
+**The ML model** was trained on the same data and learned to identify the
+sessions where the classic method diverges most from actual cost — primarily
+large-cast, high-spread sessions where words-per-actor is low and minimum
+fees are the primary cost driver.
+
+The key features driving this improvement are words-per-actor and scope
+spread, both of which are invisible to a flat per-word formula.
 
 The model reduces average error to **{metrics['mape_model_test']:.0f}%** —
 a **{metrics['improvement_pp']:.0f} percentage point improvement**.
