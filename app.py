@@ -1,7 +1,5 @@
 """
-app.py — VO Session Cost Estimator
-Entry point. Defines navigation between the three pages.
-
+app.py — VO Session Cost Estimator (Two-Stage)
 Run with: streamlit run app.py
 """
 
@@ -14,9 +12,11 @@ st.set_page_config(
 )
 
 pages = [
-    st.Page("pages/01_predictor.py",   title="Quote Predictor",   icon="🎙️"),
-    st.Page("pages/02_accuracy.py",    title="Model Accuracy",    icon="📊"),
-    st.Page("pages/03_methodology.py", title="Methodology",       icon="🔬"),
+    st.Page("pages/00_home.py",        title="Overview",          icon="🏠"),
+    st.Page("pages/01_stage1.py",      title="Stage 1 — Session", icon="📋"),
+    st.Page("pages/02_stage2.py",      title="Stage 2 — Actors",  icon="🎙️"),
+    st.Page("pages/03_accuracy.py",    title="Model Accuracy",    icon="📊"),
+    st.Page("pages/04_methodology.py", title="Methodology",       icon="🔬"),
 ]
 
 pg = st.navigation(pages)

@@ -1,0 +1,79 @@
+{
+  "stage": 2,
+  "features": [
+    "LS_Words",
+    "SS_Words",
+    "HTR_Words",
+    "STR_Words",
+    "NoTR_Words",
+    "Normalized_Wordcount",
+    "Estimated_Hours",
+    "Cost_per_Hour",
+    "Cost_Forecast_S2",
+    "Is_VIP",
+    "Is_Sequel",
+    "Actor_Session_Count",
+    "Actor_Hist_Ratio",
+    "Actor_Hist_Std",
+    "Language",
+    "Vendor"
+  ],
+  "numeric_features": [
+    "LS_Words",
+    "SS_Words",
+    "HTR_Words",
+    "STR_Words",
+    "NoTR_Words",
+    "Normalized_Wordcount",
+    "Estimated_Hours",
+    "Cost_per_Hour",
+    "Cost_Forecast_S2",
+    "Is_VIP",
+    "Is_Sequel",
+    "Actor_Session_Count",
+    "Actor_Hist_Ratio",
+    "Actor_Hist_Std"
+  ],
+  "categorical_features": [
+    "Language",
+    "Vendor"
+  ],
+  "global_mean_ratio": 1.1211,
+  "global_hist_std": 0.2335,
+  "encoder_categories": {
+    "Language": [
+      "Brazilian Portuguese",
+      "Chinese",
+      "Dutch",
+      "English",
+      "French",
+      "German",
+      "Japanese",
+      "Korean",
+      "LATAM",
+      "Polish",
+      "Spanish"
+    ],
+    "Vendor": [
+      "AsiaSound",
+      "EuroVox",
+      "GridMark",
+      "LarkFarm",
+      "LatinaVox",
+      "MediaBooth",
+      "PacificAudio",
+      "SonicBridge",
+      "SoundHouse",
+      "TokyoVox"
+    ]
+  },
+  "metrics": {
+    "mape_classic": 11.76,
+    "mape_model_test": 10.02,
+    "mape_model_cv": 9.01,
+    "r2": 0.939,
+    "improvement_pp": 1.74
+  },
+  "training_samples": 18195,
+  "test_samples": 4409
+}
