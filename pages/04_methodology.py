@@ -195,15 +195,31 @@ with tab3:
     else:
         st.warning("Run models/train_stage1.py to generate this plot.")
     st.markdown("""
-**Stage 1 SHAP — what to observe:**
+**Stage 1 SHAP — reading the chart:**
 
-`Estimated_Hours` and the raw TR word columns should dominate, reflecting the
-primary workload signal. `Standard_Rate_per_Hour` captures the language and
-vendor rate hierarchy. `NoTR_Words_Total` and `LS_Words_Total` should show
-opposing SHAP directions — confirming the model has learned that LipSync scope
-is disproportionately costly relative to simple volume. The Is_Sequel flag
-carries some signal because sequel projects inherit their parent's efficiency
-factor, creating a mild systematic pattern.
+`Estimated_Hours` is the dominant feature by a large margin. High values (red)
+push the prediction strongly upward, as expected — more hours in the booth means
+higher cost. The wide spread of dots confirms this is the single most important
+driver the model learned.
+
+`Standard_Rate_per_Hour` ranks second, capturing the combined effect of language
+market rate and vendor modifier. High rates (expensive languages like Japanese
+or Korean) push cost up; low rates (Polish, LATAM) pull it down.
+
+`LS_Words_Total` ranks third and shows a consistent rightward push — sessions
+with LipSync scope are systematically more expensive relative to their estimated
+hours, which the classic flat-rate formula does not fully capture.
+
+`Number_of_Actors` adds a modest but consistent signal, reflecting the
+interaction between cast size and session cost that goes beyond simple volume.
+
+The remaining TR word columns (`HTR`, `STR`, `SS`, `NoTR`) contribute smaller
+adjustments. `NoTR_Words_Total` sits at the bottom — once hours and rate are
+known, additional wild scope adds relatively little incremental signal.
+
+`Is_Sequel` has minimal SHAP impact, confirming it is a weak but present
+signal — sequel projects tend to run closer to their parent's efficiency pattern,
+but the effect is small compared to the primary workload features.
 """)
 
 with tab4:
@@ -213,16 +229,33 @@ with tab4:
     else:
         st.warning("Run models/train_stage2.py to generate this plot.")
     st.markdown("""
-**Stage 2 SHAP — what to observe:**
+**Stage 2 SHAP — reading the chart:**
 
-`Cost_Forecast_S2` should rank highest — the model uses the classic forecast
-as its strongest prior and predicts a ratio adjustment around it.
-`Actor_Hist_Ratio` should appear as the second most important feature,
-confirming that persistent actor efficiency is the primary signal the model
-adds beyond the classic. `Cost_per_Hour` captures VIP rate variation.
-`Actor_Session_Count` acts as a confidence weight — actors with more history
-receive more precise adjustments, while those with limited history regress
-toward the global mean.
+`Actor_Hist_Ratio` is the dominant feature by a very large margin — the chart
+shows it accounting for the vast majority of the model's adjustment range
+(approximately −0.6 to +1.0 on the ratio scale). Actors with a high historical
+ratio (red — consistently over-delivering relative to forecast) receive strong
+upward adjustments; fast actors (blue) receive downward adjustments. This
+confirms that persistent actor efficiency is the primary signal the Stage 2
+model exploits beyond the classic formula.
+
+`Actor_Hist_Std` ranks second — actors with high variance in their historical
+ratio (unpredictable performers) push the prediction upward slightly, reflecting
+the model's learned caution around uncertain actors.
+
+The TR word columns (`Total_Words`, `NoTR_Words`, `SS_Words`, `HTR_Words`,
+`STR_Words`, `LS_Words`) contribute secondary adjustments, all clustered near
+zero — the model uses them for fine-tuning but they are not the primary
+decision drivers at actor level.
+
+`Cost_Forecast_S2` ranks eighth rather than first, which is expected given
+the model predicts a *ratio* rather than an absolute cost — the forecast is
+already baked into the target definition, so the model focuses on what
+deviates from it.
+
+`Actor_Session_Count`, `Cost_per_Hour`, `Is_VIP`, `Language`, and `Vendor`
+contribute minimal SHAP values, indicating that once actor history and scope
+are accounted for, these features add little further precision.
 """)
 
 st.divider()
