@@ -187,17 +187,17 @@ def predict_stage1(
 
     # Model prediction
     row = pd.DataFrame([{
-        'Number_of_Actors':      n_actors,
-        'Normalized_Wordcount':  norm_wc,
-        'Estimated_Hours':       est_hours,
+        'LS_Words_Total':         tr_words['LS'],
+        'SS_Words_Total':         tr_words['SS'],
+        'HTR_Words_Total':        tr_words['HTR'],
+        'STR_Words_Total':        tr_words['STR'],
+        'NoTR_Words_Total':       tr_words['NoTR'],
+        'Number_of_Actors':       n_actors,
+        'Estimated_Hours':        est_hours,
         'Standard_Rate_per_Hour': std_rate,
-        'Pct_LS':  pct['LS'],
-        'Pct_SS':  pct['SS'],
-        'Pct_HTR': pct['HTR'],
-        'Pct_STR': pct['STR'],
-        'Is_Sequel': int(is_sequel),
-        'Language': language,
-        'Vendor':   vendor,
+        'Is_Sequel':              int(is_sequel),
+        'Language':               language,
+        'Vendor':                 vendor,
     }])
     cats = ['Language', 'Vendor']
     row[cats] = encoder.transform(row[cats])
@@ -267,7 +267,7 @@ def predict_stage2_actor(
         'HTR_Words':           actor_tr_words['HTR'],
         'STR_Words':           actor_tr_words['STR'],
         'NoTR_Words':          actor_tr_words['NoTR'],
-        'Normalized_Wordcount': norm_wc,
+        'Total_Words':         sum(actor_tr_words.values()),
         'Estimated_Hours':     est_hrs,
         'Cost_per_Hour':       actor_rate,
         'Cost_Forecast_S2':    classic_cost,

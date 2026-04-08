@@ -33,11 +33,11 @@ TARGET    = 'Cost_Actuals_S1'
 # ── FEATURES ──────────────────────────────────────────────────────────────────
 CATEGORICALS = ['Language', 'Vendor']
 NUMERICS     = [
+    'LS_Words_Total', 'SS_Words_Total', 'HTR_Words_Total',
+    'STR_Words_Total', 'NoTR_Words_Total',
     'Number_of_Actors',
-    'Normalized_Wordcount',
     'Estimated_Hours',
     'Standard_Rate_per_Hour',
-    'Pct_LS', 'Pct_SS', 'Pct_HTR', 'Pct_STR',
     'Is_Sequel',
 ]
 FEATURES = NUMERICS + CATEGORICALS

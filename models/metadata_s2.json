@@ -6,7 +6,7 @@
     "HTR_Words",
     "STR_Words",
     "NoTR_Words",
-    "Normalized_Wordcount",
+    "Total_Words",
     "Estimated_Hours",
     "Cost_per_Hour",
     "Cost_Forecast_S2",
@@ -24,7 +24,7 @@
     "HTR_Words",
     "STR_Words",
     "NoTR_Words",
-    "Normalized_Wordcount",
+    "Total_Words",
     "Estimated_Hours",
     "Cost_per_Hour",
     "Cost_Forecast_S2",
@@ -38,8 +38,8 @@
     "Language",
     "Vendor"
   ],
-  "global_mean_ratio": 1.1211,
-  "global_hist_std": 0.2335,
+  "global_mean_ratio": 1.0388,
+  "global_hist_std": 0.2704,
   "encoder_categories": {
     "Language": [
       "Brazilian Portuguese",
@@ -68,12 +68,12 @@
     ]
   },
   "metrics": {
-    "mape_classic": 11.76,
-    "mape_model_test": 10.02,
-    "mape_model_cv": 9.01,
-    "r2": 0.939,
-    "improvement_pp": 1.74
+    "mape_classic": 28.19,
+    "mape_model_test": 23.69,
+    "mape_model_cv": 21.55,
+    "r2": 0.865,
+    "improvement_pp": 4.5
   },
-  "training_samples": 18195,
-  "test_samples": 4409
+  "training_samples": 17670,
+  "test_samples": 4280
 }

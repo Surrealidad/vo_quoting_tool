@@ -40,15 +40,15 @@ RATIO_COL = '_ratio'  # what the model actually predicts
 CATEGORICALS = ['Language', 'Vendor']
 NUMERICS     = [
     'LS_Words', 'SS_Words', 'HTR_Words', 'STR_Words', 'NoTR_Words',
-    'Normalized_Wordcount',
+    'Total_Words',           # raw sum — model learns TR weighting from the columns above
     'Estimated_Hours',
     'Cost_per_Hour',
-    'Cost_Forecast_S2',      # strong prior — model learns residual adjustment
+    'Cost_Forecast_S2',
     'Is_VIP',
     'Is_Sequel',
-    'Actor_Session_Count',   # reliability signal: more history = more confident
-    'Actor_Hist_Ratio',      # efficiency fingerprint: actor's historical over/underrun
-    'Actor_Hist_Std',        # uncertainty signal: high variance actors less predictable
+    'Actor_Session_Count',
+    'Actor_Hist_Ratio',
+    'Actor_Hist_Std',
 ]
 FEATURES = NUMERICS + CATEGORICALS
 
@@ -61,10 +61,12 @@ print(f"  {len(df):,} past actor-session rows available")
 # ── FEATURE ENGINEERING ───────────────────────────────────────────────────────
 df['Is_VIP']    = df['Is_VIP'].astype(int)
 df['Is_Sequel'] = df['Is_Sequel'].astype(int)
+df['Total_Words'] = df[['LS_Words','SS_Words','HTR_Words','STR_Words','NoTR_Words']].sum(axis=1)
 df[RATIO_COL]   = df['Cost_Actuals_S2'] / df['Cost_Forecast_S2']
 
-# Efficiency ratio per row (for computing actor history)
-df['_actual_ratio'] = df['Actual_Hours'] / df['Estimated_Hours']
+# Actor historical ratio derived from cost ratio (Actual/Forecast)
+# Actual_Hours no longer exists — noise applied directly to cost
+df['_actual_ratio'] = df[RATIO_COL]
 
 # ── TRAIN / TEST SPLIT (before computing actor stats to prevent leakage) ──────
 # Split on unique SessionIDs so all actors in a session stay together

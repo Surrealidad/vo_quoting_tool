@@ -1,27 +1,27 @@
 {
   "stage": 1,
   "features": [
+    "LS_Words_Total",
+    "SS_Words_Total",
+    "HTR_Words_Total",
+    "STR_Words_Total",
+    "NoTR_Words_Total",
     "Number_of_Actors",
-    "Normalized_Wordcount",
     "Estimated_Hours",
     "Standard_Rate_per_Hour",
-    "Pct_LS",
-    "Pct_SS",
-    "Pct_HTR",
-    "Pct_STR",
     "Is_Sequel",
     "Language",
     "Vendor"
   ],
   "numeric_features": [
+    "LS_Words_Total",
+    "SS_Words_Total",
+    "HTR_Words_Total",
+    "STR_Words_Total",
+    "NoTR_Words_Total",
     "Number_of_Actors",
-    "Normalized_Wordcount",
     "Estimated_Hours",
     "Standard_Rate_per_Hour",
-    "Pct_LS",
-    "Pct_SS",
-    "Pct_HTR",
-    "Pct_STR",
     "Is_Sequel"
   ],
   "categorical_features": [
@@ -56,12 +56,12 @@
     ]
   },
   "metrics": {
-    "mape_classic": 13.9,
-    "mape_model_test": 12.28,
-    "mape_model_cv": 13.54,
-    "r2": 0.926,
-    "improvement_pp": 1.62
+    "mape_classic": 19.24,
+    "mape_model_test": 13.93,
+    "mape_model_cv": 15.48,
+    "r2": 0.957,
+    "improvement_pp": 5.31
   },
-  "training_samples": 555,
-  "test_samples": 139
+  "training_samples": 516,
+  "test_samples": 130
 }
